@@ -1,0 +1,120 @@
+# This file is like a blueprint for the API. 
+# With the specifications included swagger.yml, you define what data your web server can expect and how your server should respond to requests.
+
+openapi: 3.0.0
+
+info:
+  title: "Flask API"
+  description: "An Api to keep track of people and notes"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+# The 'components' section is used for holding schemas and other reusable parts of the API specification
+components:
+# The 'schemas' keyword is used for defining the data types
+  schemas:
+  # Defining a 'Person' object with two properties
+    Person:
+    # Indicating that it's an 'object' type
+      type: "object"
+      # 'required' lists the properties that must be present in the object
+      required:
+        - "lname" # In this case, 'lname' is required
+      # 'properties' lists the properties of the object and their types
+      properties:
+        fname:
+          type: "string"
+        lname:
+          type: "string"
+
+
+  parameters:
+    lname:
+      name: "lname"
+      description: "Last name of the person to get"
+      in: path
+      required: true
+      schema:
+        type: "string"
+# The paths is where all the API URL endpoints are defined. 
+#The /people value indented under that represents the start of where all the /api/people URL endpoints will be defined. 
+#The get: scope indented under /people holds the definitions associated with an HTTP GET request to the /api/people URL endpoint.
+
+paths:
+  /people:
+    get:
+#OperationId is used to configure Connexion so when the API gets an HTTP request for GET /api/people,  Flask app calls a read_all() function within the people.py module. 
+#You are essentially telling the server to look for a read_all() function in the people module
+      operationId: "people.read_all" 
+      tags:
+        - "people"
+      summary: "Read the list of people"
+      responses:
+        "200":
+          description: "successfully read the list of people"
+
+    post:
+      operationId: "people.create"
+      tags: 
+      - people
+      summary: "Create a person"
+      requestBody:
+        description: "person to create"
+        required: true
+        content:
+          application/json:
+            schema:
+              x-body-name: "person"
+              $ref: "#/components/schemas/Person"
+      responses:
+        "201":
+          description: "successfully created a person"
+  
+  
+  
+  /people/{lname}:
+    get:
+      operationId: "people.read_one"
+      tags:
+      - people
+      summary: "Read one person"
+      parameters:
+        - $ref: "#/components/parameters/lname"
+      responses:
+        "200":
+          description: "Successfully read person"
+
+
+          
+
+    put:
+      operationId: "people.update"
+      tags:
+        - people
+      summary: "Update a person"
+      parameters:
+        - $ref: "#/components/parameters/lname"
+      responses:
+        "200":
+          description: "Successfully updated person"
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              x-body-name: "person"
+              $ref: "#/components/schemas/Person"
+
+
+    delete:
+      operationId: "people.delete"
+      tags:
+        - people
+      summary: "delete a person"
+      parameters:
+        - $ref: "#/components/parameters/lname"
+      responses:
+        "204":
+          description: "Successfully deleted"
+
