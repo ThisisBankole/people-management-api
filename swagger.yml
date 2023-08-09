@@ -38,6 +38,15 @@ components:
       required: true
       schema:
         type: "string"
+    
+    note_id:
+      name: "note_id"
+      description: "unique identifier to get note"
+      in: path
+      required: true
+      schema:
+        type: "integer"
+
 # The paths is where all the API URL endpoints are defined. 
 #The /people value indented under that represents the start of where all the /api/people URL endpoints will be defined. 
 #The get: scope indented under /people holds the definitions associated with an HTTP GET request to the /api/people URL endpoint.
@@ -87,8 +96,6 @@ paths:
           description: "Successfully read person"
 
 
-          
-
     put:
       operationId: "people.update"
       tags:
@@ -118,3 +125,73 @@ paths:
         "204":
           description: "Successfully deleted"
 
+  /notes:
+
+    post:
+      operationId: "notes.create"
+      tags:
+        - Notes
+      summary: "Create note"
+      requestBody:
+        description: "New note"
+        required: true
+        content:
+          application/json:
+            schema:
+              x-body-name: "note"
+              type: "object"
+              properties:
+                person_id:
+                  type: "integer"
+                content:
+                  type: "string"
+      responses: 
+        "201":
+          description: "Successfully created a note"
+    
+
+
+  /notes/{note_id}:
+    get:
+      operationId: "notes.read_one"
+      tags:
+        - Notes
+      summary: "read a note"
+      parameters:
+        - $ref: "#/components/parameters/note_id"
+      responses:
+        "200":
+          description: "Note successfully retrieved"
+
+    put:
+      operationId: "notes.update"
+      tags:
+        - Notes
+      summary: "Update a note"
+      parameters:
+        - $ref: "#/components/parameters/note_id"
+      responses:
+        "200":
+          description: "Successfully updated note"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "note"
+              properties:
+                content:
+                  type: "string"
+
+
+    delete:
+      operationId: "notes.delete"
+      tags:
+        - "Notes"
+      summary: "delete note"
+      parameters:
+        - $ref: "#/components/parameters/note_id"
+      responses:
+        "204":
+          description: "Successfully deleted"
+
+  

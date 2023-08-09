@@ -4,17 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask API</title>
+
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>
-        Hello People
-    </h1>
-    <ul>
-        {% for person in people %}
-        <li>
-            {{ person.fname}} {{ person.lname }}
-        </li>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <!-- Centered header -->
+        <h1 class="text-center mb-5">
+            Hello People
+        </h1>
+
+        <!-- Iterate through each person -->
+        {% for person in people %} 
+            <!-- Card for each person and their notes -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    {{ person.fname }} {{ person.lname }}
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for note in person.notes %}
+                        <li class="list-group-item">
+                            {{ note.content }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
+
+    <!-- Optional: Include Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
